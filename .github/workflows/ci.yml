@@ -1,0 +1,38 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 🔐 Login to DockerHub
+      - name: DockerHub Login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # 🐳 Build Image
+      - name: Build Docker Image
+        run: docker build -t aksnag2394/flask-devops:v1 .
+
+      # 📤 Push Image
+      - name: Push Docker Image
+        run: docker push aksnag2394/flask-devops:v1
+
+      # ☸️ Set Kubeconfig
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+
+      # 🚀 Deploy to AKS
+      - name: Deploy to AKS
+        run: |
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
