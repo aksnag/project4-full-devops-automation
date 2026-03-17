@@ -12,7 +12,7 @@ def home():
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     return f"""
-    <h1>Project 4 - CI/CD with GitHub Actions</h1>
+    <h1>Project 4 - CI/CD with GitHub Actions< has been deployed/h1>
     <p><b>Version:</b> {version}</p>
     <p><b>Pod:</b> {hostname}</p>
     <p><b>Time:</b> {time}</p>
